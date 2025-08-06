@@ -227,3 +227,4 @@ To make the system production-ready, consider:
 - Replacing SSH key access with IAM roles for EC2.
 - Using dynamic Ansible inventory (via AWS plugin).
 - Add Retry & Timeout Logic.
+- Need to add CI/CD to automate the build/deploy processes.
