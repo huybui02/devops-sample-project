@@ -6,8 +6,11 @@ TAG := latest
 
 ECR_URI := $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(ECR_REPO)
 
+INFRA_DIR := infrastructure/environment/dev
+PING_HOST := $(shell terraform -chdir=$(INFRA_DIR) output -json ec2_public_ips | jq -r '.["1"]')
+
 build:
-	docker build -t $(APP_NAME):$(TAG) .
+	docker build --build-arg PING_HOST=$(PING_HOST) -t $(APP_NAME):$(TAG) .
 tag:
 	docker tag $(APP_NAME):$(TAG) $(ECR_URI):$(TAG)
 

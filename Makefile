@@ -1,4 +1,4 @@
-INFRA_DIR := infrastructure
+INFRA_DIR := infrastructure/environment/dev
 APP_DIR := latency-app
 ANSIBLE_DIR := ansible
 IMAGE_TAG ?= latest
