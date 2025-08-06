@@ -210,9 +210,20 @@ http://<ec2-public-ip>:5000/latency?host=google.com
 | **Static Inventory**           | Simpler, avoids plugin setup          | Cannot auto-scale or dynamically adjust        |
 | **Public EC2 + SG**            | Easier to SSH and deploy              | Security risk if IP ranges aren't restricted   |
 
-## Suggestions for Production Improvements
+# Optional Reflection
+## Sources of observed latency
+- Since the ping uses public IPs, packets must travel through the public internet, traversing multiple hops and ISPs, adding unpredictable latency.
+- Even within the same region, if instances are in different Availability Zones, latency might slightly increase due to physical separation.
+
+## Ideas to improve latency, precision or consistency
+- Use Private IPs Instead of Public
+- Dedicated Monitoring Agents: Install lightweight agents (e.g., Telegraf, Prometheus Node Exporter) to collect consistent latency metrics over time.
+
+## What you would do differently in a production setup
 To make the system production-ready, consider:
-- Adding a Load Balancer (e.g., ALB).
-- Using private subnets with NAT Gateway.
+- Private Network Communication: Switch to VPC-internal communication via private IP. It's faster, cheaper, and more secure.
+- Deploy in the Same AZ (if needed): For ultra-low latency systems (e.g., trading), co-locate instances in the same Availability Zone or even same placement group.
+- Secure Access & Authentication: Lock down instance access and restrict public exposure. Use IAM roles, VPC security groups, and bastion hosts for admin access.
 - Replacing SSH key access with IAM roles for EC2.
-- Using dynamic Ansible inventory (via AWS plugin or Terraform state).
+- Using dynamic Ansible inventory (via AWS plugin).
+- Add Retry & Timeout Logic.
