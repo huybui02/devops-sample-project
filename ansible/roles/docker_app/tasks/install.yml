@@ -1,0 +1,23 @@
+- name: Check if Docker installed
+  command: which docker
+  register: docker_check
+  ignore_errors: true
+
+- name: Install Docker if missing
+  apt:
+    name: docker.io
+    state: present
+    update_cache: yes
+  when: docker_check.rc != 0
+
+- name: Start Docker service if not running
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Install AWS CLI if not present
+  apt:
+    name: awscli
+    state: present
+    update_cache: yes

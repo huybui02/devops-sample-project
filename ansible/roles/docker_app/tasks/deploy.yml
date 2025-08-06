@@ -1,0 +1,21 @@
+- name: Login to ECR
+  shell: |
+    aws ecr get-login-password --region {{ aws_region }} | \
+    docker login --username AWS --password-stdin {{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com
+  environment:
+    AWS_REGION: "{{ aws_region }}"
+
+- name: Pull Docker image from ECR
+  docker_image:
+    name: "{{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com/{{ ecr_repo }}"
+    tag: "{{ image_tag }}"
+    source: pull
+
+- name: Run container
+  docker_container:
+    name: "{{ container_name }}"
+    image: "{{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com/{{ ecr_repo }}:{{ image_tag }}"
+    state: started
+    restart_policy: always
+    published_ports:
+      - "{{ container_port }}:{{ container_port }}"

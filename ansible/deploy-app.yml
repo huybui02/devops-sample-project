@@ -1,0 +1,7 @@
+- name: Deploy Docker App to EC2
+  hosts: app_servers
+  become: true
+  vars:
+    image_tag: "{{ tag | default('latest') }}"
+  roles:
+    - docker_app

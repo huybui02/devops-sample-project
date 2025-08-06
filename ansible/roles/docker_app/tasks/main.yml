@@ -1,0 +1,7 @@
+- name: Include Docker install
+  import_tasks: install.yml
+  tags: setup
+
+- name: Include Docker deploy
+  import_tasks: deploy.yml
+  tags: deploy
